@@ -18,7 +18,8 @@ struct Point{
         y = p.y;
     }
 };
-
+int winner;
+Point win_path[5];
 const int BLUE_COLOR = 1;
 const int BLACK_COLOR = 0;
 const int RED_COLOR = 4;
