@@ -282,7 +282,7 @@ void input_winpath(int first_x, int first_y, int direction_x, int direction_y) {
 	for (int i = 0; i < 5; i++) {
 		int x = first_x + i * direction_x;
 		int y = first_y + i * direction_y;
-		win_path[i] = Point(x, y);
+		win_path[i] = Point(y, x);
 	}
 }
 Point check_win(int board_game[][WIDTH], int player_id) {
@@ -462,16 +462,28 @@ Point defend(int board_game[][WIDTH], int player_id) {
 				if (up_row == 4) {
 					if (j - 1 > -1 && j + 5 < 50) {
 						if (unit == 4 && (board_game[i][j - 1] != -player_id || board_game[i][j + 5] != -player_id)) {
+							if (board_game[x][y - 1] == -player_id) {
+								return Point(i, j + 5);
+							}
+							if (board_game[x][y + 1] == -player_id) {
+								return Point(i, j - 1);
+							}
 							return Point(x, y);
 						}
 					}
 					else if (j - 1 > -1) {
 						if (unit == 4 && board_game[i][j - 1] != -player_id) {
+							if (y + 1 == 50) {
+								return Point(i, j - 1);
+							}
 							return Point(x, y);
 						}
 					}
 					else if (j + 5 < 50) {
 						if (unit == 4 && board_game[i][j + 5] != -player_id) {
+							if (y - 1 == -1) {
+								return Point(i, j + 5);
+							}
 							return Point(x, y);
 						}
 					}
@@ -495,16 +507,26 @@ Point defend(int board_game[][WIDTH], int player_id) {
 				if (up_col == 4) {
 					if (i - 1 > -1 && i + 5 < 30) {
 						if (unit == 4 && (board_game[i - 1][j] != -player_id || board_game[i + 5][j] != -player_id)) {
+							if (board_game[x - 1][y] == -player_id) {
+								return Point(i + 5, j);
+							}
+							if (board_game[x + 1][y] == -player_id) {
+								return Point(i - 1, j);
+							}
 							return Point(x, y);
 						}
 					}
 					else if (i - 1 > -1) {
 						if (unit == 4 && board_game[i - 1][j] != -player_id) {
+							if (x + 1 == 30)
+								return Point(i - 1, j);
 							return Point(x, y);
 						}
 					}
 					else if (i + 5 < 30) {
 						if (unit == 4 && board_game[i + 5][j] != -player_id) {
+							if (x - 1 == -1)
+								return Point(i + 5, j);
 							return Point(x, y);
 						}
 					}
@@ -528,16 +550,26 @@ Point defend(int board_game[][WIDTH], int player_id) {
 				if (up_cross == 4) {
 					if (i - 1 > -1 && i + 5 < 30 && j - 1 > -1 && j + 5 < 50) {
 						if (unit == 4 && (board_game[i - 1][j - 1] != -player_id || board_game[i + 5][j + 5] != -player_id)) {
+							if (board_game[x - 1][y - 1] == -player_id) {
+								return Point(i + 5, j + 5);
+							}
+							if (board_game[x + 1][y + 1] == -player_id) {
+								return Point(i - 1, j - 1);
+							}
 							return Point(x, y);
 						}
 					}
 					else if (i - 1 > -1 && j - 1 > -1) {
 						if (unit == 4 && board_game[i - 1][j - 1] != -player_id) {
+							if (x + 1 == 30 || y + 1 == 50)
+								return Point(i - 1, j - 1);
 							return Point(x, y);
 						}
 					}
 					else if (i + 5 < 30 && j + 5 < 50) {
 						if (unit == 4 && board_game[i + 5][j + 5] != -player_id) {
+							if (x - 1 == -1 || y - 1 == -1)
+								return Point(i + 5, j + 5);
 							return Point(x, y);
 						}
 					}
@@ -561,16 +593,26 @@ Point defend(int board_game[][WIDTH], int player_id) {
 				if (up_cross == 4) {
 					if (i + 1 < 30 && i - 5 > -1 && j - 1 > -1 && j + 5 < 50) {
 						if (unit == 4 && (board_game[i + 1][j - 1] != -player_id || board_game[i - 5][j + 5] != -player_id)) {
+							if (board_game[x + 1][y - 1] == -player_id) {
+								return Point(i - 5, j + 5);
+							}
+							if (board_game[x - 1][y + 1] == -player_id) {
+								return Point(i + 1, j - 1);
+							}
 							return Point(x, y);
 						}
 					}
 					else if (i + 1 < 30 && j - 1 > -1) {
 						if (unit == 4 && board_game[i + 1][j - 1] != -player_id) {
+							if (x - 1 == -1 || y + 1 == 50);
+								return Point(i + 1, j - 1);
 							return Point(x, y);
 						}
 					}
 					else if (i - 5 > -1 && j + 5 < 50) {
 						if (unit == 4 && board_game[i - 5][j + 5] != -player_id) {
+							if (x + 1 == 30 || y - 1 == -1)
+								return Point(i - 5, j + 5);
 							return Point(x, y);
 						}
 					}
