@@ -1,3 +1,5 @@
+﻿// Chuyển winpath[] sang config.h
+// Sửa ở hàm who_win
 #include <iostream>
 #include <windows.h>
 #include <conio.h>
@@ -213,6 +215,7 @@ void play_game() {
 
 			turn_limit--;
 			Sleep(PAUSE_TIME);
+			//Sleep(2000);
 		}
 	reset_game:
 		cin >> c;

@@ -1,11 +1,14 @@
+﻿//Thêm vào các hàm từ phần bắt đầu thêm vào đến kết thúc thêm vào
+//Sửa ở các hàm cho sẵn: player_baseline, attack, defend, check_win
 #ifndef BOTBASELINE
 #define BOTBASELINE
 
 #include <iostream>
 #include <stdlib.h>
 #include "config.h"
-const long atk_score[7] = { 0,3,21,192,1535,12288,98304 };
-const long def_score[7] = { 0,1,9,81,729,6561,59049 };
+// Bắt đầu phần hàm thêm vào
+const long atk_score[7] = { 0,3,20,180,1200,10000,80000 };
+const long def_score[7] = { 0,1,11,100,900,7000,65000 };
 void value_row(int board_game[][WIDTH], int player_id, int m, int n, int units[]) {
 	int value_max = 0;
 	int up = 1;
@@ -27,9 +30,6 @@ void value_row(int board_game[][WIDTH], int player_id, int m, int n, int units[]
 		if (n - 3 + i < 0)
 			i += (0 - (n - 3 + i));
 		int valuer = 0;
-		if ((n - 4 + i == -1 || board_game[m][n - 4 + i] == -player_id)) {
-			valuer--;
-		}
 		if (board_game[m][n - 3 + i] == player_id) {
 			valuer += 2;
 		}
@@ -51,9 +51,38 @@ void value_row(int board_game[][WIDTH], int player_id, int m, int n, int units[]
 		if (board_game[m][n - 1 + i] == -player_id) {
 			valuer = 0;
 		}
+		if ((n - 4 + i < 0 || board_game[m][n - 4 + i] == -player_id)) {
+			valuer--;
+		}
+		else if (n - 5 + i < 0 || board_game[m][n - 5 + i] == -player_id) {
+			if (board_game[m][n - 3 + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (n - 4 + i > -1 && board_game[m][n - 4 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
+		}
 		if ((n + 1 + i > 49 || board_game[m][n + 1 + i] == -player_id)) {
 			valuer--;
 			i += 4;
+		}
+		else if (n + 2 + i > 49 || board_game[m][n + 2 + i] == -player_id) {
+			if (board_game[m][n + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (n + 1 + i < 50 && board_game[m][n + 1 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
 		}
 		if (valuer > value_max) {
 			value_max = valuer;
@@ -83,9 +112,6 @@ void value_col(int board_game[][WIDTH], int player_id, int m, int n, int units[]
 		if (m - 3 + i < 0)
 			i += (0 - (m - 3 + i));
 		int valuer = 0;
-		if ((m - 4 + i == -1 || board_game[m - 4 + i][n] == -player_id)) {
-			valuer--;
-		}
 		if (board_game[m - 3 + i][n] == player_id) {
 			valuer += 2;
 		}
@@ -107,9 +133,38 @@ void value_col(int board_game[][WIDTH], int player_id, int m, int n, int units[]
 		if (board_game[m - 1 + i][n] == -player_id) {
 			valuer = 0;
 		}
+		if ((m - 4 + i < 0 || board_game[m - 4 + i][n] == -player_id)) {
+			valuer--;
+		}
+		else if (m - 5 + i < 0 || board_game[m - 5 + i][n] == -player_id) {
+			if (board_game[m - 3 + i][n] == player_id) {
+				valuer--;
+			}
+		}
+		if (m - 4 + i > -1 && board_game[m - 4 + i][n] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
+		}
 		if ((m + 1 + i > 29 || board_game[m + 1 + i][n] == -player_id)) {
 			valuer--;
 			i += 4;
+		}
+		else if (m + 2 + i > 29 || board_game[m + 2 + i][n] == -player_id) {
+			if (board_game[m + i][n] == player_id) {
+				valuer--;
+			}
+		}
+		if (m + 1 + i < 30 && board_game[m + 1 + i][n] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
 		}
 		if (valuer > value_max) {
 			value_max = valuer;
@@ -140,9 +195,6 @@ void value_cross_1(int board_game[][WIDTH], int player_id, int m, int n, int uni
 			i++;
 		}
 		int valuer = 0;
-		if ((m - 4 + i == -1 || n - 4 + i == -1 || board_game[m - 4 + i][n - 4 + i] == -player_id)) {
-			valuer--;
-		}
 		if (board_game[m - 3 + i][n - 3 + i] == player_id) {
 			valuer += 2;
 		}
@@ -164,9 +216,38 @@ void value_cross_1(int board_game[][WIDTH], int player_id, int m, int n, int uni
 		if (board_game[m - 1 + i][n - 1 + i] == -player_id) {
 			valuer = 0;
 		}
+		if ((m - 4 + i < 0 || n - 4 + i < 0 || board_game[m - 4 + i][n - 4 + i] == -player_id)) {
+			valuer--;
+		}
+		else if (m - 5 + i < 0 || n - 5 + i < 0 || board_game[m - 5 + i][n - 5 + i] == -player_id) {
+			if (board_game[m - 3 + i][n - 3 + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (m - 4 + i > -1 && n - 4 + i > -1 && board_game[m - 4 + i][n - 4 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
+		}
 		if ((m + 1 + i > 29 || n + 1 + i > 49 || board_game[m + 1 + i][n + 1 + i] == -player_id)) {
 			valuer--;
 			i += 4;
+		}
+		else if (m + 2 + i > 29 || n + 2 + i > 49 || board_game[m + 2 + i][n + 2 + i] == -player_id) {
+			if (board_game[m + i][n + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (m + 1 + i < 30 && n + 1 + i < 50 && board_game[m + 1 + i][n + 1 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
 		}
 		if (valuer > value_max) {
 			value_max = valuer;
@@ -197,9 +278,6 @@ void value_cross_2(int board_game[][WIDTH], int player_id, int m, int n, int uni
 			i++;
 		}
 		int valuer = 0;
-		if ((m + 4 - i == 30 || n - 4 + i == -1 || board_game[m + 4 - i][n - 4 + i] == -player_id)) {
-			valuer--;
-		}
 		if (board_game[m + 3 - i][n - 3 + i] == player_id) {
 			valuer += 2;
 		}
@@ -221,9 +299,38 @@ void value_cross_2(int board_game[][WIDTH], int player_id, int m, int n, int uni
 		if (board_game[m + 1 - i][n - 1 + i] == -player_id) {
 			valuer = 0;
 		}
+		if ((m + 4 - i > 29 || n - 4 + i < 0 || board_game[m + 4 - i][n - 4 + i] == -player_id)) {
+			valuer--;
+		}
+		else if (m + 5 - i > 29 || n - 5 + i < 0 || board_game[m + 5 - i][n - 5 + i] == -player_id) {
+			if (board_game[m + 3 - i][n - 3 + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (m + 4 - i < 30 && n - 4 + i > -1 && board_game[m + 4 - i][n - 4 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
+		}
 		if ((m - 1 - i < 0 || n + 1 + i>49 || board_game[m - 1 - i][n + 1 + i] == -player_id)) {
 			valuer--;
 			i += 4;
+		}
+		else if (m - 2 - i < 0 || n + 2 + i > 49 || board_game[m - 2 - i][n + 2 + i] == -player_id) {
+			if (board_game[m - i][n + i] == player_id) {
+				valuer--;
+			}
+		}
+		if (m - 1 - i > -1 && n + 1 + i < 50 && board_game[m - 1 - i][n + 1 + i] == player_id) {
+			if (valuer == 5) {
+				valuer += 2;
+			}
+			else if (valuer >= 2 && valuer < 7) {
+				valuer++;
+			}
 		}
 		if (valuer > value_max) {
 			value_max = valuer;
@@ -285,6 +392,8 @@ void input_winpath(int first_x, int first_y, int direction_x, int direction_y) {
 		win_path[i] = Point(y, x);
 	}
 }
+// Kết thúc phần hàm thêm vào
+// Ngoài ra là sửa trong những hàm có sẵn
 Point check_win(int board_game[][WIDTH], int player_id) {
 	for (int i = 0; i < 30; i++) {
 		for (int j = 0; j < 50; j++) {
@@ -653,24 +762,26 @@ Point player_rand(int board_game[][WIDTH], int player_id) {
 }
 
 Point player_baseline(int board_game[][WIDTH], int player_id) {
+	// Đánh 2 nước đầu vào khu vực chính giữa
 	if (board_game[15][25] == 0) {
 		return Point(15, 25);
 	}
 	if (board_game[14][26] == 0) {
 		return Point(14, 26);
 	}
-	Point p = check_win(board_game, player_id);
+	//
+	Point p = check_win(board_game, player_id);// đánh vào nước thứ 5 không bị chặn 1 trong 2 đầu để chiến thắng
 	if (p.x != -1 && p.y != -1) {
 		winner = player_id;
 		return p;
 	}
 	else {
-		p = defend(board_game, player_id);
+		p = defend(board_game, player_id);// đánh vào nước thứ 5 không bị chặn 1 trong 2 đầu của đối phương để không thua
 		if (p.x != -1 && p.y != -1) {
 			return p;
 		}
 		else {
-			return attack(board_game, player_id);
+			return attack(board_game, player_id);// đánh vào nước có value cao nhất
 			//return player_rand(board_game, player_id);
 		}
 	}
